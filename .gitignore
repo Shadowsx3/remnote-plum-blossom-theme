@@ -3,3 +3,7 @@ dist/
 
 # macOS
 .DS_Store
+
+# python (dev_server.py)
+__pycache__/
+*.pyc
