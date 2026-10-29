@@ -18,8 +18,14 @@
 ## Use the theme right now (no repo needed)
 
 Paste `theme.css` into RemNote's **Custom CSS** powerup (search `Custom CSS` in
-omnibar) and add a CSS block. Live immediately, mobile rules included. The repo
-is only needed for the marketplace listing.
+omnibar) and add a CSS block. Live immediately, mobile rules included.
+
+Or run `./dev.sh` and load it into RemNote properly:
+Settings → Plugins → Build → **"Develop from localhost"** →
+`http://localhost:8080/`. See the README for the port-8080 caveat (another
+plugin's dev server will be holding it).
+
+The repo is only needed for the marketplace listing.
 
 ## Get the files into the repo — pick one
 

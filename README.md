@@ -51,6 +51,48 @@ keeps clear of the home indicator.
 
 ---
 
+## Test it locally (no publishing)
+
+```bash
+./dev.sh          # serves http://localhost:8080
+```
+
+Then pick one:
+
+1. **Visual preview, with all the toggles:** <http://localhost:8080/preview.html>
+   — over `http` rather than `file://`, so the phone iframe, the Google-Fonts
+   extra and everything else behave the way they will inside RemNote.
+2. **Live inside RemNote:** Settings → Plugins → Build →
+   **"Develop from localhost"** → enter `http://localhost:8080/` → Develop.
+
+The server logs every request, so you can watch RemNote fetch `manifest.json`
+and `theme.css`. It sends `Access-Control-Allow-Origin: *` (RemNote fetches
+cross-origin) and `Cache-Control: no-store` (so editing `theme.css` and
+refreshing shows the change immediately). It binds dual-stack like the official
+template's dev server, so `localhost`, `127.0.0.1` and `::1` all work.
+
+**Port 8080 is a shared resource.** RemNote's "Develop from localhost" only
+speaks to 8080, and this server refuses to start if something else holds it —
+usually another plugin's `npm run dev` webpack server:
+
+```
+Could not listen on :::8080 ([Errno 48] Address already in use).
+RemNote expects port 8080, so free it first:
+  lsof -nP -iTCP:8080 -sTCP:LISTEN
+```
+
+Stop that dev server (Ctrl+C in the terminal running it), then start `./dev.sh`.
+On startup the script reads its own manifest back over `127.0.0.1`, `::1` *and*
+`localhost` and warns if any of them answers with a different plugin — macOS
+resolves `localhost` to `::1` first, so that is a real way to end up testing the
+wrong plugin.
+
+If "Develop from localhost" ever refuses to load a theme (a CSS-only theme has
+no JavaScript entry, which is unusual for the plugin loader), fall back to
+pasting `theme.css` into the **Custom CSS** powerup — that path always works.
+
+---
+
 ## Install
 
 ### A. As a Theme plugin — recommended, and the only route that works on mobile
@@ -223,6 +265,7 @@ manifest.json             Theme plugin manifest, enableOnMobile: true
 README.md                 this file (also what the marketplace shows)
 PUBLISHING.md             how to publish: create the public repo, then upload
 preview.html              local preview with toggles
+dev.sh / dev_server.py    serve the theme on localhost:8080 for live testing
 build-theme-zip.sh        validates the manifest, builds dist/plum-blossom-theme.zip
 extras/falling-petals.css
 extras/blossom-bullets.css
