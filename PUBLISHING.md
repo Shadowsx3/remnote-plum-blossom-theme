@@ -35,6 +35,27 @@ There is no way around this: the repo has to exist, and it has to be public.
 - `origin` is already configured for that URL, so pushing is a single command
 - `build-theme-zip.sh` now warns when `repoUrl` is not reachable
 
+## Fastest path: one command
+
+```bash
+cd ~/Documents/Github/remnote-plum-blossom-theme
+GH_TOKEN=<token> ./publish.sh
+```
+
+The token needs **Contents: Read and write** plus **Administration: Read and
+write** (fine-grained), or the classic `repo` scope. `publish.sh` then:
+
+1. prints which account the token belongs to,
+2. creates the public repo (and carries on if it already exists),
+3. pushes `main`,
+4. checks the URL answers **200** (i.e. it is really public),
+5. runs `build-theme-zip.sh` so `dist/plum-blossom-theme.zip` is ready.
+
+The token is only ever placed in the push URL, and the remote is restored to the
+clean URL afterwards (via a `trap`, so it happens even if the push fails). Run
+it with no token and it prints the two-click browser route instead of failing
+obscurely.
+
 ## What you have to do (2 minutes)
 
 ### 1. Create the public repo
