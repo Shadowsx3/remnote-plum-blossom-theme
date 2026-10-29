@@ -1,5 +1,18 @@
 # Publishing 紫梅 Plum Blossom
 
+## Want to use the theme right now? You do not need a repo for that
+
+The repo is only needed for the **Theme Marketplace upload**. To use the theme
+today on desktop or the web app:
+
+1. Open the **Custom CSS** powerup in RemNote (search `Custom CSS` in the
+   omnibar).
+2. Add a CSS block and paste all of `theme.css` into it.
+
+No manifest, no repo, no upload — and the mobile rules in the theme are written
+for exactly this route too. The plugin route below is what puts it in the
+marketplace and makes it installable from the mobile app's theme list.
+
 ## Why RemNote rejected the manifest
 
 RemNote's validator does not just check that `repoUrl` looks like a URL — it
@@ -37,9 +50,9 @@ folder already has them, and a pre-made README would cause a push conflict.
 
 **Option A · no git, drag and drop (easiest)**
 
-In the empty repo click **uploading an existing file**, drag in the contents of
-this folder (all of it, including `docs/` so the README screenshots resolve),
-then **Commit changes**.
+In the empty repo click **uploading an existing file**, drag in everything in
+this folder **except `.git/` and `dist/`** (include `docs/` so the README
+screenshots resolve), then **Commit changes**.
 
 **Option B · git push**
 
