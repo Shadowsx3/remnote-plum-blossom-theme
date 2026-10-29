@@ -1,0 +1,5 @@
+# build output from build-theme-zip.sh
+dist/
+
+# macOS
+.DS_Store

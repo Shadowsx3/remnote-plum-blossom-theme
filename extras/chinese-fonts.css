@@ -1,0 +1,74 @@
+/* ==========================================================================
+   Plum Blossom 紫梅 — EXTRA: Chinese typography (中文字体)
+   --------------------------------------------------------------------------
+   Paste this AFTER theme.css, as its OWN CSS block, on its own.
+
+   Why its own block: @import has to be the very first thing in a stylesheet.
+   If you paste it underneath the theme inside the same CSS block, browsers
+   throw it away and the fonts silently do nothing.
+
+   These are Google Fonts, so RemNote needs to be online the first time it
+   loads them. If they never arrive (offline, blocked, corporate DNS), the
+   fallbacks kick in — Songti SC on macOS, SimSun on Windows, Noto Serif CJK
+   on Android — and the theme still looks right.
+
+     马善政 Ma Shan Zheng  ... brush calligraphy, for headings
+     Noto Serif SC ......... 宋体-flavoured body text
+     站酷快乐体 ZCOOL KuaiLe  ... the cute one, for labels and UI
+
+   Prefer everything to be cute rather than inky? Swap the two body blocks
+   below for the commented ZCOOL KuaiLe line.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&family=ZCOOL+KuaiLe&display=swap");
+
+/* body: Latin stays rounded, Chinese becomes a serif */
+.rn-text,
+.rn-editor-container,
+.rn-document-wrapper {
+  font-family: ui-rounded, "Noto Serif SC", "Songti SC", "STSong", "SimSun",
+    "Noto Serif CJK SC", system-ui, -apple-system, sans-serif;
+}
+
+/* ... or, if you would rather have the cute round one everywhere:
+.rn-text,
+.rn-editor-container,
+.rn-document-wrapper {
+  font-family: ui-rounded, "ZCOOL KuaiLe", "Yuanti SC", "Hiragino Maru Gothic ProN",
+    "Microsoft YaHei", system-ui, sans-serif;
+}
+*/
+
+/* headings: 毛笔, brushed by hand */
+.rn-text-heading-large,
+.rn-text-heading-medium,
+.rn-text-heading-small,
+.rn-text-heading-xsmall {
+  font-family: "Ma Shan Zheng", "ZCOOL KuaiLe", "Kaiti SC", "STKaiti", "KaiTi",
+    serif;
+  font-weight: 400;
+}
+
+/* buttons, tags and labels: the cute face */
+.rn-button,
+.rn-tag-list-label,
+.rn-inline-field-title,
+.rn-nav-tab-button {
+  font-family: ui-rounded, "ZCOOL KuaiLe", "Yuanti SC", "Microsoft YaHei",
+    system-ui, sans-serif;
+}
+
+/* code is still code */
+.rn-code-node,
+.rn-code-node * {
+  font-family: var(--pb-font-mono);
+}
+
+/* CJK glyphs are square and read better with a roomier line-height, but
+   RemNote has its own line-height setting (rn-lineheight-*), so this stays
+   off by default. Uncomment it if you would rather have air than options.
+
+.rn-text {
+  line-height: 1.7;
+}
+*/

@@ -1,0 +1,62 @@
+/* ==========================================================================
+   Plum Blossom 紫梅 — EXTRA: plum-blossom bullets ❀ (花瓣项目符号)
+   --------------------------------------------------------------------------
+   Paste this AFTER theme.css, as its own CSS block.
+
+   This one is EXPERIMENTAL, and the only part of the set that is: RemNote
+   draws its bullets with an internal element whose markup can change between
+   versions, so these rules are written to degrade gently rather than break.
+   The worst case is that you see the normal dot with a small ❀ next to it.
+
+   Variant A is safe and always worth it. Variant B replaces the dot with a
+   blossom — if your RemNote version needs it, nudge the negative margin
+   (start at -0.85em) until the ❀ sits where the dot used to be. The "CSS
+   Selector Helper" plugin (Plugins and Themes -> search) shows you the exact
+   class RemNote is using for your bullets.
+   ========================================================================== */
+
+/* ---- Variant A (safe): the dot becomes plum, and blushes pink on hover ---- */
+
+.rn-bullet-container,
+.rn-bullet-container svg {
+  color: var(--pb-plum-400);
+}
+
+/* the dot of the rem you are editing — RemNote has no documented modifier
+   class for this, so hover is the only reliable signal we style */
+.rn-bullet-container:hover,
+.rn-bullet-container:hover svg {
+  color: var(--pb-petal-400);
+}
+
+/* ---- Variant B (cute): hide the built-in dot, draw ❀ instead ---- */
+/* Comment this whole block out if your bullets start looking doubled. */
+
+.rn-bullet-container svg {
+  visibility: hidden;
+}
+
+.rn-bullet-container::before {
+  content: "❀";
+  position: relative;
+  z-index: 1;
+  margin-right: -0.85em;
+  font-size: 1em;
+  line-height: 1;
+  color: var(--pb-plum-400);
+}
+
+.rn-bullet-container:hover::before {
+  color: var(--pb-petal-400);
+}
+
+/* ... and on a phone, keep it simple: Variant A only */
+@media (max-width: 768px) {
+  .rn-bullet-container::before {
+    content: none;
+  }
+
+  .rn-bullet-container svg {
+    visibility: visible;
+  }
+}

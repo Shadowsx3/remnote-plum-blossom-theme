@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plum Blossom 紫梅 · RemNote theme preview</title>
+
+    <!-- Preview scaffolding only. It sits before the theme so that theme.css
+         always wins, and every class here is prefixed pv- to stay out of its
+         way. The mock RemNote markup below uses RemNote's real class names. -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      .pv-toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+        padding: 10px 16px;
+        background: #2b2333;
+        color: #f4ecfb;
+        font: 13px/1.4 system-ui, sans-serif;
+      }
+
+      .pv-toolbar strong {
+        font-weight: 600;
+      }
+
+      .pv-toolbar label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+      }
+
+      .pv-hint {
+        margin-left: auto;
+        opacity: 0.6;
+      }
+
+      .pv-app {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .pv-topbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--rn-clr-border-opaque);
+      }
+
+      .pv-body {
+        display: flex;
+        flex: 1;
+      }
+
+      .pv-sidebar {
+        width: 210px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .pv-doc {
+        flex: 1;
+        min-height: 70vh;
+        padding: 30px 34px 120px;
+      }
+
+      .pv-rem {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        padding: 3px 0;
+      }
+
+      .pv-rem > .rn-bullet-container {
+        flex: 0 0 auto;
+        padding-top: 3px;
+      }
+
+      .pv-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin: 14px 0;
+      }
+
+      .pv-phone-block {
+        padding: 26px 16px 70px;
+        font: 13px/1.4 system-ui, sans-serif;
+      }
+
+      .pv-phone {
+        width: 390px;
+        height: 780px;
+        border: 10px solid #2b2333;
+        border-radius: 34px;
+        background: #fff;
+      }
+
+      @media (max-width: 900px) {
+        .pv-sidebar {
+          display: none;
+        }
+
+        .pv-phone {
+          width: 100%;
+          max-width: 390px;
+        }
+      }
+    </style>
+
+    <link rel="stylesheet" href="theme.css" />
+  </head>
+
+  <body class="light">
+    <div class="pv-toolbar">
+      <strong>紫梅 Plum Blossom</strong>
+      <label><input type="checkbox" id="pv-dark" /> dark fallback</label>
+      <label><input type="checkbox" id="pv-petals" /> falling petals</label>
+      <label><input type="checkbox" id="pv-bullets" /> ❀ bullets</label>
+      <label><input type="checkbox" id="pv-fonts" /> Chinese fonts</label>
+      <span class="pv-hint"
+        >the phone rules key off the viewport — use device emulation for those</span
+      >
+    </div>
+
+    <!-- ---------------------------------------------------------------- app -->
+    <div class="pv-app rn-clr-background-primary">
+      <div class="top-bar-container pv-topbar">
+        <span class="rn-button">File</span>
+        <span class="rn-button">Edit</span>
+        <span class="rn-rem-reference">紫梅</span>
+        <span style="flex: 1"></span>
+        <span class="rn-button rn-button--primary">Study</span>
+      </div>
+
+      <div class="pv-body">
+        <aside class="rn-sidebar pv-sidebar">
+          <span class="rn-nav-tab-button">All Notes</span>
+          <span class="rn-nav-tab-button">Flashcards</span>
+          <span class="rn-rem-reference">梅 · plum blossom</span>
+          <span class="rn-rem-reference">花 · flower</span>
+          <span class="rn-rem-reference">春 · spring</span>
+          <div class="rn-divider"></div>
+          <span class="rn-tag-list-label">#中文</span>
+          <span class="rn-tag-list-label">#cute</span>
+        </aside>
+
+        <main class="rn-document-wrapper pv-doc">
+          <div class="rn-text-heading-large">紫梅 Plum Blossom</div>
+          <div class="rn-text-heading-small">春 · spring</div>
+
+          <div class="pv-rem">
+            <span class="rn-bullet-container"
+              ><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                <circle cx="5" cy="5" r="3.2" fill="currentColor" /></svg
+            ></span>
+            <span class="rn-text"
+              >梅花在雪里开 —— plum blossoms open in the snow, and the whole page
+              blushes <span class="rn-rem-reference">[[粉紫色 purple]]</span
+              >.</span
+            >
+          </div>
+
+          <div class="pv-rem">
+            <span class="rn-bullet-container"
+              ><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                <circle cx="5" cy="5" r="3.2" fill="currentColor" /></svg
+            ></span>
+            <span class="rn-text"
+              >今天学习中文 <span class="highlight-color--purple">一花一世界</span>,
+              <span class="cloze">落花时节又逢君</span>, 你好世界 你好!</span
+            >
+          </div>
+
+          <div class="pv-rem">
+            <span class="rn-bullet-container"
+              ><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+                <circle cx="5" cy="5" r="3.2" fill="currentColor" /></svg
+            ></span>
+            <span class="rn-text"
+              ><span class="rn-checkbox--checked"></span> 复习 vocabulary · 词汇
+              <span class="rn-tag-list-label">#中文</span></span
+            >
+          </div>
+
+          <div class="rn-divider"></div>
+
+          <div class="rn-code-node">
+            <pre style="margin: 0">
+梅 · méi · plum blossom
+花 · huā · flower
+春 · chūn · spring</pre
+            >
+          </div>
+
+          <div class="pv-row">
+            <span class="rn-button">plain button</span>
+            <span class="rn-button rn-button--primary">primary button</span>
+            <span class="rn-icon-button">❀</span>
+            <span class="rn-switch" data-state="checked"
+              ><span class="rn-switch-handle"></span
+            ></span>
+            <span
+              class="rn-progress-bar"
+              style="display: block; width: 120px; height: 6px"
+            ></span>
+          </div>
+
+          <div class="rn-queue-container" style="padding: 14px; margin-top: 18px">
+            <div class="rn-queue">
+              <div class="rn-text">排队复习 · the study queue</div>
+              <div class="rn-flashcard-delimiter">← → 已经回答了</div>
+            </div>
+          </div>
+
+          <div
+            class="rn-clr-shadow-menu"
+            style="padding: 12px; margin-top: 18px; max-width: 320px"
+          >
+            <div class="rn-clr-content-primary">A popup menu</div>
+            <div class="rn-clr-content-secondary">hover · 悬停 · 选择</div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------- phone frame -->
+    <div class="pv-phone-block">
+      <h2>Phone · 390 × 780</h2>
+      <iframe class="pv-phone" src="preview.html?embed=1" title="Phone preview"></iframe>
+    </div>
+
+    <script>
+      // The copy inside the phone frame drops the controls, so a frame never
+      // nests another frame.
+      const embedded = new URLSearchParams(location.search).get('embed') === '1';
+      if (embedded) {
+        document.querySelector('.pv-toolbar').hidden = true;
+        document.querySelector('.pv-phone-block').hidden = true;
+      }
+
+      const dark = document.getElementById('pv-dark');
+      dark.checked = document.body.classList.contains('dark');
+      dark.addEventListener('change', () => {
+        document.body.classList.toggle('dark', dark.checked);
+        document.body.classList.toggle('light', !dark.checked);
+      });
+
+      const extras = {
+        'pv-petals': 'extras/falling-petals.css',
+        'pv-bullets': 'extras/blossom-bullets.css',
+        'pv-fonts': 'extras/chinese-fonts.css',
+      };
+
+      for (const [id, href] of Object.entries(extras)) {
+        const box = document.getElementById(id);
+        box.addEventListener('change', () => {
+          const existing = document.querySelector('link[data-extra="' + id + '"]');
+          if (box.checked && !existing) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = href;
+            link.dataset.extra = id;
+            document.head.appendChild(link);
+          } else if (!box.checked && existing) {
+            existing.remove();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

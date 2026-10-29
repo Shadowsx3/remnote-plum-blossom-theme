@@ -1,0 +1,18 @@
+{
+  "manifestVersion": 1,
+  "id": "plum_blossom_theme",
+  "name": "Plum Blossom 紫梅 (Cute Purple)",
+  "author": "bassmd",
+  "repoUrl": "https://github.com/bassmd/remnote-plum-blossom-theme",
+  "enableOnMobile": true,
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "theme": ["light", "dark"],
+  "description": "A cute, girly, Chinese-inspired light theme: plum blossom purple and petal pink on soft rice paper, rounded corners and pastel highlights. Built to feel lovely on mobile.",
+  "requestNative": false,
+  "requiredScopes": []
+}
+

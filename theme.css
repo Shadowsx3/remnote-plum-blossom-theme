@@ -1,0 +1,789 @@
+/* ==========================================================================
+   Plum Blossom 紫梅 — a cute, girly, Chinese-inspired theme for RemNote
+   --------------------------------------------------------------------------
+   Light is the main design: soft rice-paper whites, wisteria purple and
+   petal pink, rounded corners, pastel highlighters, plum-blossom texture.
+
+   Sections
+     0. Palette ................ the only colours you need to touch to re-skin
+     1. Light design tokens .... RemNote's own CSS variables (--rn-*)
+     2. Light semantics ........ RemNote's stable rn-* classes
+     3. Cute details ........... blossoms, the 紫梅 watermark, headings, clozes
+     4. Mobile & touch ......... phones, tablets, touch targets, safe areas
+     5. Accessibility .......... selection, focus, reduced motion
+     6. Dark fallback .......... optional safety net, at the end of the file
+
+   Works with RemNote's Custom CSS powerup, and as a Theme/Snippet plugin
+   (see README.md). Only stable, documented classes are used, so it should
+   survive RemNote updates.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. Palette — 梅花 plum blossom
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* ink 墨 — a warm purple-black; never pure black */
+  --pb-ink: #3a2e45;
+  --pb-ink-soft: #5b4a6b;
+  --pb-ink-muted: #8b7a9b;
+
+  /* paper 宣纸 — violet-tinted whites */
+  --pb-paper-0: #ffffff;
+  --pb-paper-1: #fdfaff;
+  --pb-paper-2: #f9f3fd;
+  --pb-paper-3: #f4ebfa;
+  --pb-paper-4: #eee1f7;
+
+  /* plum 紫 — the main purple (wisteria / plum blossom) */
+  --pb-plum-100: #f6effc;
+  --pb-plum-200: #e9d8f7;
+  --pb-plum-300: #d3b3ee;
+  --pb-plum-400: #b57edc;
+  --pb-plum-500: #8e5bc9;
+  --pb-plum-600: #7e4cbb; /* 5.6:1 on paper — safe for links */
+  --pb-plum-700: #6d3e9e; /* 7.2:1 on paper — headings, strong text */
+
+  /* petal 花瓣 — the girly pinks */
+  --pb-petal-100: #fdedf4;
+  --pb-petal-200: #f9d6e4;
+  --pb-petal-300: #f2a7c3;
+  --pb-petal-400: #e87fa8;
+  --pb-petal-500: #c2547f;
+
+  /* accents, straight off a 水墨 scroll */
+  --pb-jade: #5fa88f;
+  --pb-gold: #e0a93c;
+  --pb-sky: #7fa8e8;
+  --pb-peach: #f0a886;
+  --pb-rose: #e4737f;
+
+  /* shapes — everything is soft and rounded */
+  --pb-radius-sm: 8px;
+  --pb-radius-md: 12px;
+  --pb-radius-lg: 18px;
+  --pb-radius-pill: 999px;
+
+  --pb-shadow-soft: 0 2px 10px rgba(142, 91, 201, 0.1);
+  --pb-shadow-lift: 0 6px 22px rgba(142, 91, 201, 0.16);
+
+  /* a whisper of plum blossoms, tiled behind the page (2 blossoms, 96px) */
+  --pb-petals: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='%23B57EDC' fill-opacity='0.10'%3E%3Cg transform='translate(22 22)'%3E%3Ccircle cx='0' cy='-4' r='3.1'/%3E%3Ccircle cx='3.8' cy='-1.2' r='3.1'/%3E%3Ccircle cx='2.4' cy='3.2' r='3.1'/%3E%3Ccircle cx='-2.4' cy='3.2' r='3.1'/%3E%3Ccircle cx='-3.8' cy='-1.2' r='3.1'/%3E%3C/g%3E%3C/g%3E%3Cg fill='%23F2A7C3' fill-opacity='0.14'%3E%3Cg transform='translate(72 70) scale(0.8)'%3E%3Ccircle cx='0' cy='-4' r='3.1'/%3E%3Ccircle cx='3.8' cy='-1.2' r='3.1'/%3E%3Ccircle cx='2.4' cy='3.2' r='3.1'/%3E%3Ccircle cx='-2.4' cy='3.2' r='3.1'/%3E%3Ccircle cx='-3.8' cy='-1.2' r='3.1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------------------------
+   1. Light design tokens (default) — RemNote's own variables
+   -------------------------------------------------------------------------- */
+
+:root,
+body.light {
+  /* RemNote paints a lot of hover/overlay colours through this opacity. */
+  --tw-bg-opacity: 0.7;
+  /* Our highlighters are already pastel, so they are painted opaque. */
+  --tw-bg-opacity-highlight: 1;
+
+  /* surfaces */
+  --rn-clr-background-primary: var(--pb-paper-1);
+  --rn-clr-background-secondary: var(--pb-paper-2);
+  --rn-clr-background-tertiary: var(--pb-paper-3);
+  --rn-clr-background-elevation-5: var(--pb-paper-0);
+  --rn-clr-background-elevation-10: var(--pb-paper-1);
+  --rn-clr-background-elevation-15: var(--pb-paper-2);
+  --rn-clr-background-elevation-20: var(--pb-paper-2);
+  --rn-clr-background-elevation-30: var(--pb-paper-3);
+  --rn-clr-background-elevation-50: var(--pb-paper-4);
+  --rn-clr-background-overlay-light: rgba(253, 250, 255, 0.72);
+  --rn-clr-background-overlay-dark: rgba(58, 46, 69, 0.4);
+
+  /* text */
+  --rn-clr-content-primary: var(--pb-ink);
+  --rn-clr-content-secondary: var(--pb-ink-soft);
+  --rn-clr-content-tertiary: var(--pb-ink-muted);
+  --rn-clr-content-accent: var(--pb-plum-600);
+  --rn-clr-content-on-color: var(--pb-paper-0);
+
+  /* lines */
+  --rn-clr-border-opaque: var(--pb-plum-200);
+  --rn-clr-border-accent: var(--pb-plum-300);
+  --rn-clr-border-accent-light: var(--pb-plum-200);
+  --rn-clr-border-light-accent: var(--pb-plum-200);
+  --rn-clr-border-selected: var(--pb-plum-500);
+  --rn-clr-border-state-disabled: var(--pb-plum-100);
+
+  /* grey "positions", not a ramp: 10 = subtle surface, 30 = line,
+     60 = muted text, 80 = text */
+  --rn-colors-gray-10: var(--pb-plum-100) !important;
+  --rn-colors-gray-30: var(--pb-plum-200);
+  --rn-colors-gray-60: var(--pb-ink-muted);
+  --rn-colors-gray-80: var(--pb-ink);
+
+  /* state colours, softened to pastels */
+  --rn-clr-background-positive: var(--pb-jade);
+  --rn-clr-background-light-positive: #dff2ea;
+  --rn-clr-content-positive: #3f8a72;
+  --rn-clr-background-warning: var(--pb-gold);
+  --rn-clr-background-light-warning: #fdf1d8;
+  --rn-clr-content-warning: #9a6f14;
+  --rn-clr-background-negative: var(--pb-rose);
+  --rn-clr-background-light-negative: #fbe0e4;
+  --rn-clr-content-negative: #b8465a;
+
+  /* the little rem colour picker */
+  --bg-mint-20: #cbebdd;
+  --bg-purple-20: var(--pb-plum-200);
+  --bg-cyan-20: #d3e4fa;
+  --bg-yellow-20: #fbebc4;
+  --bg-orange-20: #fbdcc9;
+  --bg-red-20: #f8d2d8;
+
+  /* highlighters — pastel, so the ink stays readable */
+  --highlight-color-purple: #e4cff5;
+  --highlight-color-red: #fad1da;
+  --highlight-color-orange: #fbdfc9;
+  --highlight-color-yellow: #fbedc6;
+  --highlight-color-blue: #d6e6fb;
+  --highlight-color-green: #cdebdd;
+
+  /* ... and their raw RGB, in case a build composes rgba() itself */
+  --highlight-color-purple-raw: 228, 207, 245;
+  --highlight-color-red-raw: 250, 209, 218;
+  --highlight-color-orange-raw: 251, 223, 201;
+  --highlight-color-yellow-raw: 251, 237, 198;
+  --highlight-color-blue-raw: 214, 230, 251;
+  --highlight-color-green-raw: 205, 235, 221;
+
+  /* a rounded, friendly face — no downloads, uses what the device has */
+  --pb-font-rounded: ui-rounded, "SF Pro Rounded", "Hiragino Maru Gothic ProN",
+    "Nunito", "Quicksand", "Segoe UI Variable", system-ui, -apple-system,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --pb-font-mono: "SF Mono", "JetBrains Mono", "Cascadia Mono", Menlo, Consolas,
+    monospace;
+}
+
+/* --------------------------------------------------------------------------
+   2. Light semantics — RemNote's stable rn-* classes
+   The variables above already do most of the work; these rules cover the
+   places where RemNote paints a literal colour instead of a token.
+   -------------------------------------------------------------------------- */
+
+/* surfaces */
+.rn-clr-background-primary {
+  background-color: var(--pb-paper-1);
+}
+
+.rn-clr-background-secondary {
+  background-color: var(--pb-paper-2);
+}
+
+.rn-clr-background-tertiary {
+  background-color: var(--pb-paper-3);
+}
+
+.rn-clr-background {
+  background-color: var(--pb-paper-1);
+}
+
+.rn-clr-background-light-accent {
+  background-color: var(--pb-plum-200);
+}
+
+.rn-clr-background-accent,
+.rn-clr-background-accent--hovered {
+  background-color: var(--pb-plum-500);
+}
+
+.hover\:rn-clr-background-accent--hovered:hover {
+  background: var(--pb-plum-600) !important;
+}
+
+.hover\:rn-clr-background-light-accent--hovered {
+  background: var(--pb-plum-200) !important;
+  color: var(--pb-ink) !important;
+}
+
+.top-bar-container,
+.rn-navigation-bar {
+  background-color: var(--pb-paper-1);
+  border-color: var(--pb-plum-200);
+}
+
+.rn-sidebar,
+.rn-document-sidebar {
+  background-color: var(--pb-paper-2);
+}
+
+/* text */
+.rn-clr-content-primary {
+  color: var(--pb-ink);
+}
+
+.rn-clr-content-secondary {
+  color: var(--pb-ink-soft);
+}
+
+.rn-clr-content-tertiary {
+  color: var(--pb-ink-muted);
+}
+
+.rn-clr-content-accent,
+.rn-clr-content-logo-color {
+  color: var(--pb-plum-600);
+}
+
+/* the body face: rounded and friendly, and the paper behind everything */
+body,
+.rn-text,
+.rn-editor-container {
+  font-family: var(--pb-font-rounded);
+}
+
+body {
+  background-color: var(--pb-paper-1);
+  color: var(--pb-ink);
+}
+
+/* code stays code */
+.rn-code-node,
+.rn-code-node * {
+  font-family: var(--pb-font-mono);
+}
+
+/* links and references — plum purple */
+.rn-rem-reference,
+.text-blue-60,
+.text-blue-80 {
+  color: var(--pb-plum-600);
+  border-radius: var(--pb-radius-sm);
+}
+
+.rn-rem-reference:hover {
+  background-color: var(--pb-plum-100);
+}
+
+/* buttons, switches, inputs */
+.rn-button {
+  color: var(--pb-ink) !important;
+  background-color: var(--pb-plum-100);
+  border-radius: var(--pb-radius-md);
+  transition: background-color 0.12s ease-in-out;
+}
+
+.rn-button:hover {
+  background-color: var(--pb-plum-200);
+}
+
+.rn-button--primary,
+.rn-button.rn-button--primary {
+  color: var(--pb-paper-0) !important;
+  background-color: var(--pb-plum-500) !important;
+  border-radius: var(--pb-radius-md);
+}
+
+.rn-button--primary:hover,
+.rn-button.rn-button--primary:hover {
+  background-color: var(--pb-plum-600) !important;
+}
+
+.rn-icon-button,
+.rn-add-button,
+.rn-bottom-add-button,
+.rn-close-button {
+  border-radius: var(--pb-radius-pill);
+}
+
+.rn-icon-button:hover,
+.rn-add-button:hover,
+.rn-bottom-add-button:hover {
+  background-color: var(--pb-plum-100);
+}
+
+.rn-switch {
+  background-color: var(--pb-plum-200) !important;
+  border-radius: var(--pb-radius-pill);
+}
+
+.rn-switch[data-state="checked"] {
+  background-color: var(--pb-plum-500) !important;
+  border-color: var(--pb-plum-500) !important;
+}
+
+.rn-switch-handle {
+  background-color: var(--pb-paper-0);
+}
+
+.rn-settings__link:hover {
+  background-color: var(--pb-plum-100) !important;
+  border-radius: var(--pb-radius-sm);
+}
+
+.rn-settings__link.rn-clr-content-accent {
+  color: var(--pb-plum-600);
+}
+
+/* menus, popups, dialogs, toasts — lifted and rounded */
+.rn-clr-shadow-menu,
+.rn-popup,
+.rn-popup-background,
+.rn-dialog,
+.rn-dialog-background,
+.rn-sort-popup,
+.rn-paste-popup,
+.rn-date-picker,
+.rn-toast,
+.rn-toast-container {
+  border-radius: var(--pb-radius-lg);
+}
+
+.rn-clr-shadow-menu,
+.rn-popup-background,
+.rn-dialog-background {
+  background-color: var(--pb-paper-0) !important;
+  box-shadow: var(--pb-shadow-lift) !important;
+}
+
+.rn-clr-shadow-menu .rn-clr-content-secondary,
+.rn-clr-shadow-menu .rn-clr-content-primary {
+  color: var(--pb-ink);
+}
+
+.rn-popup__content.relative.rn-clr-background-primary.overflow-y-hidden,
+.rn-popup__content.relative.rn-clr-background-primary.overflow-y-hidden.overflow-x-hidden {
+  background-color: var(--pb-paper-0) !important;
+}
+
+.rn-popup__content.relative.rn-clr-background-primary.overflow-y-hidden
+  #search-results__list {
+  background-color: var(--pb-paper-0) !important;
+}
+
+#search-results__result {
+  color: var(--pb-ink);
+  border-radius: var(--pb-radius-md);
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+#search-results__result[data-cmdopt-selected="true"] {
+  background-color: var(--pb-plum-100);
+}
+
+/* the little underline that marks the active tab */
+[data-cy-active="true"] {
+  border-bottom-color: var(--pb-plum-500) !important;
+}
+
+.rn-nav-tab-button {
+  border-radius: var(--pb-radius-pill);
+}
+
+/* the hovering format menu on iPad and phones */
+.rn-background-toolbar,
+.rn-floating-toolbar,
+.rn-floating-toolbar-wrapper {
+  background-color: var(--pb-paper-0) !important;
+  border-radius: var(--pb-radius-pill);
+  box-shadow: var(--pb-shadow-lift);
+}
+
+/* dividers and tables */
+.rn-divider {
+  --rn-colors-gray-20: var(--pb-plum-200);
+  background-color: transparent !important;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--pb-plum-300) 18%,
+    var(--pb-petal-300) 50%,
+    var(--pb-plum-300) 82%,
+    transparent 100%
+  ) !important;
+}
+
+.rn-table-row,
+.rn-table-row-container {
+  border-color: var(--pb-plum-200);
+}
+
+.rn-column-header,
+.rn-sticky-header {
+  background-color: var(--pb-plum-100);
+  color: var(--pb-plum-700);
+}
+
+/* checkboxes — a plum check on a petal box */
+.rn-checkbox--unchecked {
+  color: var(--pb-plum-600);
+  background-color: var(--pb-paper-0);
+  border-color: var(--pb-plum-300);
+  border-radius: var(--pb-radius-sm);
+}
+
+.rn-checkbox--checked {
+  background-color: var(--pb-plum-100);
+  border-color: var(--pb-plum-500);
+  border-radius: var(--pb-radius-sm);
+  background-image: url("data:image/svg+xml,%3Csvg width='22' height='14' viewBox='-2 0 20 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m6.5 12.6-6.1-6 2.2-2.2 3.9 4L13.9.9l2.2 2.2-9.6 9.5Z' fill='%237E4CBB'/%3E%3C/svg%3E") !important;
+}
+
+/* the study queue */
+.rn-queue,
+.rn-queue-container {
+  background: var(--pb-paper-1);
+}
+
+.rn-progress-bar {
+  background-color: var(--pb-plum-500);
+  border-radius: var(--pb-radius-pill);
+}
+
+.rn-flashcard-delimiter {
+  color: var(--pb-plum-400);
+}
+
+.rn-practice-rem-in-this-folder,
+.rn-study-deck-btn {
+  border-radius: var(--pb-radius-md);
+}
+
+/* --------------------------------------------------------------------------
+   3. Cute details — 梅花 blossoms, the 紫梅 watermark, ink and paper
+   -------------------------------------------------------------------------- */
+
+/* paper: a plum wash at the top of each document, plus a whisper of blossoms.
+   Delete the radial-gradient() if you want a perfectly plain page. */
+.rn-document-wrapper {
+  background-image: radial-gradient(
+      120% 55% at 50% 0%,
+      rgba(181, 126, 220, 0.1) 0%,
+      rgba(242, 167, 195, 0.06) 40%,
+      rgba(253, 250, 255, 0) 72%
+    ),
+    var(--pb-petals);
+  background-repeat: no-repeat, repeat;
+}
+
+/* 紫梅 — "purple plum", written top-to-bottom in the corner like a scroll.
+   Purely decorative: it cannot be clicked or selected. Hidden on phones. */
+body::after {
+  content: "紫梅";
+  position: fixed;
+  right: 12px;
+  bottom: 16px;
+  z-index: 0;
+  writing-mode: vertical-rl;
+  letter-spacing: 0.22em;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--pb-plum-400);
+  opacity: 0.14;
+  pointer-events: none;
+}
+
+/* headings — 花 blossom + a plum brush-stroke underline that fades out to the
+   right, so it reads as ink rather than as a rule, at any width */
+.rn-text-heading-large,
+.rn-text-heading-medium,
+.rn-text-heading-small,
+.rn-text-heading-xsmall {
+  background-image: linear-gradient(
+    90deg,
+    var(--pb-plum-300) 0%,
+    var(--pb-petal-300) 45%,
+    rgba(242, 167, 195, 0) 100%
+  );
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 3px;
+  padding-bottom: 2px;
+  color: var(--pb-plum-700);
+}
+
+.rn-text-heading-large::before,
+.rn-text-heading-medium::before {
+  content: "❀ ";
+  color: var(--pb-petal-400);
+}
+
+/* highlights — pastel and pill-shaped, so they read as little 花瓣 */
+.highlight-color--purple,
+.highlight-color--red,
+.highlight-color--orange,
+.highlight-color--yellow,
+.highlight-color--blue,
+.highlight-color--green,
+.rn-highlight-reference {
+  border-radius: var(--pb-radius-pill);
+  color: var(--pb-ink);
+}
+
+.highlight-color--purple,
+.rn-highlight-reference {
+  background-color: var(--highlight-color-purple);
+}
+
+/* clozes — 填空, a lavender slot with a plum underline */
+.cloze {
+  background-color: var(--pb-plum-100);
+  border-bottom-color: var(--pb-plum-400);
+  border-radius: var(--pb-radius-sm);
+}
+
+.cloze:hover {
+  border-bottom-color: var(--pb-plum-600);
+}
+
+.rich-text-editor__change-cloze-button {
+  background-color: unset;
+}
+
+/* code blocks — 印章, a lavender slab with a plum spine */
+.rn-code-node {
+  background-color: var(--pb-plum-100);
+  border-left: 3px solid var(--pb-plum-300);
+  border-radius: var(--pb-radius-md);
+  padding-left: 8px;
+}
+
+/* tags and powerup labels — little plum sweets */
+.rn-tag-list-label,
+.rn-inline-field-title {
+  background-color: var(--pb-plum-100);
+  color: var(--pb-plum-700);
+  border-radius: var(--pb-radius-pill);
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* folders and documents, tinted plum (RemNote's own icon fills) */
+svg[data-icon="rem-document-light"] path[fill="#FCFCFF"],
+svg[data-icon="rem-folder-light"] path[fill="#FCFCFF"],
+svg[data-icon="rem-top-level-rem-light"] path[fill="#FCFCFF"] {
+  fill: var(--pb-plum-100);
+}
+
+svg[data-icon="rem-document-light"] path[stroke="#CACAD9"],
+svg[data-icon="rem-folder-light"] path[stroke="#CACAD9"],
+svg[data-icon="rem-top-level-rem-light"] path[stroke="#CACAD9"] {
+  stroke: var(--pb-plum-300);
+}
+
+svg[data-icon="rem-document-light"] path[fill="#CACAD9"],
+svg[data-icon="rem-folder-light"] path[fill="#CACAD9"],
+svg[data-icon="rem-top-level-rem-light"] path[fill="#CACAD9"] {
+  fill: var(--pb-plum-300);
+}
+
+/* scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--pb-plum-300);
+  border-radius: var(--pb-radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--pb-plum-400);
+}
+
+/* --------------------------------------------------------------------------
+   4. Mobile & touch
+   RemNote on a phone has less room and sticky hover styles; everything here
+   is behind a media query, so the desktop look is untouched.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* the phone app paints the queue and popups solid rather than layered */
+  .rn-queue,
+  .rn-queue-container,
+  .rn-flashcards-page-container,
+  .rn-flashcards-home {
+    background: var(--pb-paper-1) !important;
+  }
+
+  .rn-page-header-mobile,
+  .rn-navigation-bar,
+  .rn-mobile-sync-status {
+    background-color: var(--pb-paper-1);
+    color: var(--pb-ink);
+  }
+
+  /* on a 6" screen the paper wash stays, the blossom tile and the 紫梅
+     watermark go: decoration should not compete with your notes */
+  .rn-document-wrapper {
+    background-image: radial-gradient(
+      140% 40% at 50% 0%,
+      rgba(181, 126, 220, 0.1) 0%,
+      rgba(253, 250, 255, 0) 70%
+    );
+    background-repeat: no-repeat;
+  }
+
+  body::after {
+    display: none;
+  }
+
+  /* keep the add button clear of the home indicator on notched phones */
+  .rn-bottom-add-button {
+    margin-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+
+  /* the hovering format menu should not hug the screen edges */
+  .rn-background-toolbar,
+  .rn-floating-toolbar {
+    margin: 6px;
+  }
+}
+
+/* tablets: decorations stay, the wash just calms down */
+@media (min-width: 769px) and (max-width: 1180px) {
+  .rn-document-wrapper {
+    background-image: var(--pb-petals);
+  }
+}
+
+/* a finger, not a mouse: hover feedback that lingers after a tap is noise */
+@media (hover: none) {
+  .rn-rem-reference:hover {
+    background-color: transparent;
+  }
+}
+
+/* phones: a plum tap highlight, and no iOS text inflation */
+body {
+  -webkit-tap-highlight-color: rgba(181, 126, 220, 0.18);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   5. Accessibility & polish
+   -------------------------------------------------------------------------- */
+
+/* selecting text leaves a plum blush */
+::selection {
+  background: rgba(181, 126, 220, 0.3);
+  color: var(--pb-ink);
+}
+
+/* keyboard focus you can actually see */
+:focus-visible {
+  outline: 2px solid var(--pb-plum-500);
+  outline-offset: 2px;
+}
+
+/* the theme itself is still; the optional extras animate, and they obey this */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. Dark fallback (optional) — 紫梅夜色, plum blossom at night
+   Light is the theme; this is only a safety net, so that flicking RemNote
+   into dark mode does not leave you with a half-broken app. It lives at the
+   end of the file so that it wins over the light values above.
+   Delete this whole section if you never use dark mode.
+   -------------------------------------------------------------------------- */
+
+:root.dark,
+html.dark,
+body.dark,
+.dark {
+  /* the palette flips, and the tokens in section 1 follow automatically,
+     because they are written as var(--pb-*) rather than as literal colours */
+  --pb-ink: #ece2f6;
+  --pb-ink-soft: #c6b7d6;
+  --pb-ink-muted: #9c8cae;
+
+  --pb-paper-0: #241d2e;
+  --pb-paper-1: #1b1523;
+  --pb-paper-2: #221b2c;
+  --pb-paper-3: #2a2236;
+  --pb-paper-4: #332a41;
+
+  --pb-plum-100: #2e2440;
+  --pb-plum-200: #3d3054;
+  --pb-plum-300: #5c4880;
+  --pb-plum-400: #9370c8;
+  --pb-plum-500: #b18ae0;
+  --pb-plum-600: #c9a7ec;
+  --pb-plum-700: #ddc4f5;
+
+  --pb-petal-100: #33202e;
+  --pb-petal-200: #47293c;
+  --pb-petal-300: #a05f80;
+  --pb-petal-400: #e79cc0;
+  --pb-petal-500: #f0b6d2;
+
+  --pb-shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --pb-shadow-lift: 0 6px 22px rgba(0, 0, 0, 0.45);
+
+  /* dark-mode only tweaks */
+  --rn-clr-background-overlay-light: rgba(27, 21, 35, 0.72);
+  --rn-clr-background-overlay-dark: rgba(0, 0, 0, 0.55);
+  --tw-bg-opacity: 0.45;
+
+  --highlight-color-purple: #4a3568;
+  --highlight-color-red: #552b3a;
+  --highlight-color-orange: #56382a;
+  --highlight-color-yellow: #57491f;
+  --highlight-color-blue: #2c3f5c;
+  --highlight-color-green: #26443a;
+
+  --highlight-color-purple-raw: 74, 53, 104;
+  --highlight-color-red-raw: 85, 43, 58;
+  --highlight-color-orange-raw: 86, 56, 42;
+  --highlight-color-yellow-raw: 87, 73, 31;
+  --highlight-color-blue-raw: 44, 63, 92;
+  --highlight-color-green-raw: 38, 68, 58;
+
+  --bg-purple-20: #4a3568;
+  --bg-mint-20: #26443a;
+  --bg-cyan-20: #2c3f5c;
+  --bg-yellow-20: #57491f;
+  --bg-orange-20: #56382a;
+  --bg-red-20: #552b3a;
+
+  --rn-clr-background-light-positive: #26443a;
+  --rn-clr-background-light-warning: #57491f;
+  --rn-clr-background-light-negative: #552b3a;
+  --rn-clr-content-positive: #8fd3ba;
+  --rn-clr-content-warning: #e9c477;
+  --rn-clr-content-negative: #f0a3ae;
+}
+
+/* the dark icon set, tinted plum */
+svg[data-icon="rem-document-dark"] path[fill="#202024"],
+svg[data-icon="rem-folder-dark"] path[fill="#202024"],
+svg[data-icon="rem-top-level-rem-dark"] path[fill="#202024"] {
+  fill: var(--pb-plum-200);
+}
+
+svg[data-icon="rem-document-dark"] path[stroke="#53535B"],
+svg[data-icon="rem-folder-dark"] path[stroke="#53535B"],
+svg[data-icon="rem-top-level-rem-dark"] path[stroke="#53535B"] {
+  stroke: var(--pb-plum-300);
+}
+
+svg[data-icon="rem-document-dark"] path[fill="#53535B"],
+svg[data-icon="rem-folder-dark"] path[fill="#53535B"],
+svg[data-icon="rem-top-level-rem-dark"] path[fill="#53535B"] {
+  fill: var(--pb-plum-300);
+}
+
