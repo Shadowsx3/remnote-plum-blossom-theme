@@ -32,14 +32,18 @@ the viewport, not the window.
 
 ### 预览 / screenshots
 
-![Plum Blossom on desktop, light](docs/preview-light.png)
+![Plum Blossom on desktop, light](https://raw.githubusercontent.com/BassMD/remnote-plum-blossom-theme/main/docs/preview-light.png)
 
 *Light — 宣纸 paper, plum purple, pastel highlighters, the blossom tile, and
 紫梅 in the corner.*
 
 | Phone · 390px | Extras on | Dark fallback |
 | --- | --- | --- |
-| ![phone](docs/preview-phone.png) | ![extras](docs/preview-extras.png) | ![dark](docs/preview-dark.png) |
+| ![phone](https://raw.githubusercontent.com/BassMD/remnote-plum-blossom-theme/main/docs/preview-phone.png) | ![extras](https://raw.githubusercontent.com/BassMD/remnote-plum-blossom-theme/main/docs/preview-extras.png) | ![dark](https://raw.githubusercontent.com/BassMD/remnote-plum-blossom-theme/main/docs/preview-dark.png) |
+
+(The image links are absolute `raw.githubusercontent.com` URLs so that they also
+render in the RemNote marketplace, which shows this README. If you rename the
+repo, update them and `repoUrl` in `manifest.json`.)
 
 The phone shot shows the real mobile rules at work: the blossom tile and the
 紫梅 watermark step aside, the queue and chrome go solid, and the add button
@@ -177,13 +181,21 @@ To find the class RemNote is actually using for an element, install the
 
 ## Publishing it to the Theme Marketplace
 
-The marketplace shows your README, and it wants pictures. The four screenshots
-in `docs/` are referenced with relative paths, which is what you want on
-GitHub — but if you publish the theme, swap them for absolute URLs (e.g.
-`https://raw.githubusercontent.com/<you>/<repo>/main/docs/preview-light.png`)
-so they render in the marketplace too. Then upload
-`dist/plum-blossom-theme.zip` from **Plugins and Themes → Build → Upload
-Theme**.
+**RemNote requires `repoUrl` to be an existing *public* GitHub repo** — it
+fetches the URL and rejects the upload otherwise (`Repo URL must point to a
+public GitHub repo`). The manifest points at
+`https://github.com/BassMD/remnote-plum-blossom-theme`, which does not exist
+yet, so **create it first**: see **[PUBLISHING.md](PUBLISHING.md)** for the
+one-click link and the two ways to publish (drag-and-drop, or `git push`).
+
+Once it is live (check: the URL returns 200 in a private window):
+
+```bash
+./build-theme-zip.sh   # now prints: repoUrl reachable … (HTTP 200)
+```
+
+then upload `dist/plum-blossom-theme.zip` from
+**Plugins and Themes → Build → Upload Theme**.
 
 ---
 
@@ -209,11 +221,13 @@ Theme**.
 theme.css                 the theme (light first, six sections)
 manifest.json             Theme plugin manifest, enableOnMobile: true
 README.md                 this file (also what the marketplace shows)
+PUBLISHING.md             how to publish: create the public repo, then upload
 preview.html              local preview with toggles
-build-theme-zip.sh        builds dist/plum-blossom-theme.zip for upload
+build-theme-zip.sh        validates the manifest, builds dist/plum-blossom-theme.zip
 extras/falling-petals.css
 extras/blossom-bullets.css
 extras/chinese-fonts.css
+docs/preview-*.png        screenshots from the rendered Chromium run
 LICENSE                   MIT
 ```
 

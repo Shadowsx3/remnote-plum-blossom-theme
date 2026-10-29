@@ -92,6 +92,20 @@ print(
 )
 PY
 
+# RemNote also fetches repoUrl, and insists it is an existing *public GitHub
+# repo* — a plausible-but-nonexistent URL is rejected at upload time with
+# "Repo URL must point to a public GitHub repo". Warn rather than fail, since
+# you may be offline or creating the repo as you read this.
+REPO_URL=$(python3 -c "import json;print(json.load(open('manifest.json'))['repoUrl'])")
+REPO_CODE=$(curl -s -o /dev/null -w '%{http_code}' --max-time 8 "$REPO_URL" 2>/dev/null || echo 000)
+if [ "$REPO_CODE" = "200" ]; then
+  echo "repoUrl reachable: $REPO_URL (HTTP 200)"
+else
+  echo "WARNING: repoUrl $REPO_URL answered HTTP $REPO_CODE."
+  echo "         RemNote needs an existing PUBLIC GitHub repo here, or the upload is"
+  echo "         rejected. See PUBLISHING.md."
+fi
+
 ( cd "$STAGE" && zip -q -r "../plum-blossom-theme.zip" theme.css manifest.json README.md )
 
 echo "Built $OUT"
