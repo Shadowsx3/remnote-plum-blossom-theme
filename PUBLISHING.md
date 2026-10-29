@@ -1,132 +1,84 @@
 # Publishing 紫梅 Plum Blossom
 
-## Want to use the theme right now? You do not need a repo for that
+## Where things stand
 
-The repo is only needed for the **Theme Marketplace upload**. To use the theme
-today on desktop or the web app:
+- Repo: **https://github.com/Shadowsx3/remnote-plum-blossom-theme** — exists,
+  **public**, default branch `main`, verified answering HTTP 200.
+- It is still **empty**: nothing has been pushed to it yet.
+- `manifest.json` now points `repoUrl` at that repo, so RemNote's
+  *"Repo URL must point to a public GitHub repo"* check passes.
+- This folder is a git repo: commits on `main`, `origin` set to that URL.
 
-1. Open the **Custom CSS** powerup in RemNote (search `Custom CSS` in the
-   omnibar).
-2. Add a CSS block and paste all of `theme.css` into it.
+**One thing left: get the files into the repo, then upload the zip.**
 
-No manifest, no repo, no upload — and the mobile rules in the theme are written
-for exactly this route too. The plugin route below is what puts it in the
-marketplace and makes it installable from the mobile app's theme list.
+> The earlier rejection was my mistake: `repoUrl` pointed at
+> `https://github.com/BassMD/remnote-plum-blossom-theme`, a guessed account that
+> does not own the repo. A URL that 404s is rejected even if it looks valid.
 
-## Why RemNote rejected the manifest
+## Use the theme right now (no repo needed)
 
-RemNote's validator does not just check that `repoUrl` looks like a URL — it
-**fetches it** and requires it to resolve to an existing, **public** GitHub
-repo. `https://github.com/BassMD/remnote-plum-blossom-theme` returns **404**
-because the repo does not exist yet (your account `BassMD` currently has zero
-public repos), so the upload is rejected with:
+Paste `theme.css` into RemNote's **Custom CSS** powerup (search `Custom CSS` in
+omnibar) and add a CSS block. Live immediately, mobile rules included. The repo
+is only needed for the marketplace listing.
 
-```
-Repo URL must point to a public GitHub repo.
-```
+## Get the files into the repo — pick one
 
-There is no way around this: the repo has to exist, and it has to be public.
+### A · drag and drop (no git, 2 clicks)
 
-## What is already done
+In the empty repo click **uploading an existing file**, drag in everything from
+`~/Documents/Github/remnote-plum-blossom-theme` **except `.git/` and `dist/`**
+(include `docs/` so the README screenshots resolve), then **Commit changes**.
 
-- The whole theme folder is a **git repo**, committed on `main`:
-  `36de049 Plum Blossom 紫梅: a cute purple Chinese-inspired light theme for RemNote`
-- `manifest.json` points at `https://github.com/BassMD/remnote-plum-blossom-theme`
-- `origin` is already configured for that URL, so pushing is a single command
-- `build-theme-zip.sh` now warns when `repoUrl` is not reachable
-
-## Fastest path: one command
-
-```bash
-cd ~/Documents/Github/remnote-plum-blossom-theme
-GH_TOKEN=<token> ./publish.sh
-```
-
-The token needs **Contents: Read and write** plus **Administration: Read and
-write** (fine-grained), or the classic `repo` scope. `publish.sh` then:
-
-1. prints which account the token belongs to,
-2. creates the public repo (and carries on if it already exists),
-3. pushes `main`,
-4. checks the URL answers **200** (i.e. it is really public),
-5. runs `build-theme-zip.sh` so `dist/plum-blossom-theme.zip` is ready.
-
-The token is only ever placed in the push URL, and the remote is restored to the
-clean URL afterwards (via a `trap`, so it happens even if the push fails). Run
-it with no token and it prints the two-click browser route instead of failing
-obscurely.
-
-## What you have to do (2 minutes)
-
-### 1. Create the public repo
-
-Open this link — it pre-fills the name and public visibility:
-
-**https://github.com/new?name=remnote-plum-blossom-theme&visibility=public**
-
-Do **not** add a README, .gitignore or licence in the GitHub wizard — this
-folder already has them, and a pre-made README would cause a push conflict.
-
-### 2. Publish the files — pick one
-
-**Option A · no git, drag and drop (easiest)**
-
-In the empty repo click **uploading an existing file**, drag in everything in
-this folder **except `.git/` and `dist/`** (include `docs/` so the README
-screenshots resolve), then **Commit changes**.
-
-**Option B · git push**
+### B · git push
 
 ```bash
 cd ~/Documents/Github/remnote-plum-blossom-theme
 git push -u origin main
 ```
 
-GitHub no longer accepts account passwords over HTTPS, so when it asks for a
-password paste a **personal access token** (github.com → Settings → Developer
-settings → Personal access tokens → Fine-grained, `Contents: Read and write`).
-To stop being asked again:
+GitHub no longer accepts account passwords over HTTPS, so paste a **personal
+access token** when prompted (Settings → Developer settings → Personal access
+tokens → fine-grained, `Contents: Read and write`). To stop being asked again:
 
 ```bash
-git config --global credential.helper osxkeychain
+ git config --global credential.helper osxkeychain
 ```
 
-### 3. Confirm it is actually public
+### C · hand over a token and let the script do it
 
 ```bash
-curl -s -o /dev/null -w '%{http_code}\n' https://github.com/BassMD/remnote-plum-blossom-theme
-# want: 200
+GH_TOKEN=<token> ./publish.sh
 ```
 
-Or just open it in a private/incognito window. If it asks you to log in, it is
-private and RemNote will still reject it.
+`publish.sh` prints which account the token belongs to, creates the repo if it
+is missing, pushes `main`, verifies the URL answers 200, and builds the zip. The
+token only ever goes into the push URL, and a `trap` restores the clean remote
+afterwards.
 
-### 4. Upload the theme
+## Confirm, then upload
 
 ```bash
-cd ~/Documents/Github/remnote-plum-blossom-theme
-./build-theme-zip.sh          # should now say: repoUrl reachable … (HTTP 200)
+curl -s -o /dev/null -w '%{http_code}\n' https://github.com/Shadowsx3/remnote-plum-blossom-theme   # want 200
+./build-theme-zip.sh    # want: repoUrl reachable ... (HTTP 200)
 ```
 
 Then RemNote → **Plugins and Themes → Build → Upload Theme** →
 `dist/plum-blossom-theme.zip`.
 
-## Using a different repo name or owner
+## Using a different name or owner
 
-Edit `repoUrl` in `manifest.json`, re-run `./build-theme-zip.sh`, and update the
-remote:
+Edit `repoUrl` in `manifest.json` and the screenshot URLs in `README.md`,
+re-run `./build-theme-zip.sh`, then:
 
 ```bash
-git remote set-url origin https://github.com/<you>/<repo>.git
+git remote set-url origin https://github.com/<owner>/<repo>.git
 ```
 
-## Why this could not be automated from here
+## Why the push could not be done from here
 
-- The GitHub toolkit is blocked in this session:
-  `[Session Restriction] Toolkit 'github' is not allowed for this session`, so
-  no tool available to me can create a repository.
-- There is no cached credential on this machine (`git config --global
-  credential.helper` is unset, and `gh` is not installed), so a push has
-  nothing to authenticate with either.
-
-Both are one-time, user-side steps.
+There is no GitHub credential on this machine: no `gh`, no keychain entry for
+github.com, no SSH key (`Permission denied (publickey)`), no `GH_TOKEN`, and the
+GitHub toolkit is blocked in this session
+(`[Session Restriction] Toolkit 'github' is not allowed for this session`).
+Creating a repo and pushing both need one of those, so it is a one-time
+user-side step — everything else is prepared.

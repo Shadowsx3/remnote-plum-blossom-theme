@@ -32,14 +32,14 @@ the viewport, not the window.
 
 ### 预览 / screenshots
 
-![Plum Blossom on desktop, light](https://raw.githubusercontent.com/BassMD/remnote-plum-blossom-theme/main/docs/preview-light.png)
+![Plum Blossom on desktop, light](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-light.png)
 
 *Light — 宣纸 paper, plum purple, pastel highlighters, the blossom tile, and
 紫梅 in the corner.*
 
 | Phone · 390px | Extras on | Dark fallback |
 | --- | --- | --- |
-| ![phone](https://raw.githubusercontent.com/BassMD/remnote-plum-blossom-theme/main/docs/preview-phone.png) | ![extras](https://raw.githubusercontent.com/BassMD/remnote-plum-blossom-theme/main/docs/preview-extras.png) | ![dark](https://raw.githubusercontent.com/BassMD/remnote-plum-blossom-theme/main/docs/preview-dark.png) |
+| ![phone](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-phone.png) | ![extras](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-extras.png) | ![dark](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-dark.png) |
 
 (The image links are absolute `raw.githubusercontent.com` URLs so that they also
 render in the RemNote marketplace, which shows this README. If you rename the
@@ -183,15 +183,15 @@ To find the class RemNote is actually using for an element, install the
 
 **RemNote requires `repoUrl` to be an existing *public* GitHub repo** — it
 fetches the URL and rejects the upload otherwise (`Repo URL must point to a
-public GitHub repo`). The manifest points at
-`https://github.com/BassMD/remnote-plum-blossom-theme`, which does not exist
-yet, so **create it first**: see **[PUBLISHING.md](PUBLISHING.md)** for the
-one-click link and the two ways to publish (drag-and-drop, or `git push`).
-
-Once it is live (check: the URL returns 200 in a private window):
+public GitHub repo`). The manifest now points at
+`https://github.com/Shadowsx3/remnote-plum-blossom-theme`, which exists and is
+public — but it is still **empty**, so push the files before uploading (the
+README screenshots are served from that repo too). See
+**[PUBLISHING.md](PUBLISHING.md)**.
 
 ```bash
-./build-theme-zip.sh   # now prints: repoUrl reachable … (HTTP 200)
+git push -u origin main      # or drag-and-drop in the browser, see PUBLISHING.md
+./build-theme-zip.sh         # want: repoUrl reachable … (HTTP 200)
 ```
 
 then upload `dist/plum-blossom-theme.zip` from
