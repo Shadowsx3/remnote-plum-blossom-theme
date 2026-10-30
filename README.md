@@ -241,6 +241,76 @@ then upload `dist/plum-blossom-theme.zip` from
 
 ---
 
+## Updating the theme — and what the official guide does not tell you
+
+RemNote's [Submitting Plugins](https://plugins.remnote.com/advanced/submitting_plugins)
+page covers the **first** upload only: run `npm run build`, press "Upload
+plugin"/"Upload Theme" in the Build tab, keep the GitHub repo public so they can
+review the code (only plugins that contain JavaScript are reviewed at all, and a
+theme has none).
+
+There is **no documented release or update procedure**. No version-history UI, no
+statement about how installed users receive a new version, and nothing about
+whether an update is re-reviewed. What the docs do give you is the mechanism,
+spread over three pages:
+
+| Doc | What it establishes |
+| --- | --- |
+| [Manifest](https://plugins.remnote.com/advanced/manifest) | `version` (`major`/`minor`/`patch`) is required, and *"Only one plugin of each ID can be installed or registered in our marketplace"* — so re-uploading the **same `id`** updates the existing listing instead of creating a second one. `changelogUrl` is an optional link "to the changelog". |
+| Submitting Plugins | the upload happens in-app (Build tab), and the repo must be public. |
+| SDK changelog | *"Manifests are now validated on build"* and *"Add Repository and Report bugs links to the marketplace details page"* — which is why `projectUrl`, `supportUrl` and `changelogUrl` are set in this manifest. |
+
+So an update is: **same `id`, bumped `version`, re-uploaded zip.** That is the
+whole contract. Whether RemNote refreshes an installed theme automatically or
+makes the user re-install is not documented anywhere I could find — worth asking
+in the [RemNote Discord](https://discord.gg/remnote) if it matters to you.
+
+### One command
+
+```bash
+./release.sh patch "fixed the phone watermark on iPad"   # or minor / major
+```
+
+`release.sh`:
+
+1. bumps `version` in `manifest.json`,
+2. prepends a dated entry to `CHANGELOG.md` (which the manifest links as
+   `changelogUrl`),
+3. runs `build-theme-zip.sh` — manifest schema check + `repoUrl` reachability,
+4. commits `v1.0.1: <message>` and tags `v1.0.1`,
+5. pushes `main` and the tag.
+
+Then finish in RemNote: **Plugins and Themes → Build → Upload Theme** →
+`dist/plum-blossom-theme.zip`. RemNote has no upload API, so that step is always
+manual.
+
+Flags: `--dry-run` (print the plan, change nothing) and `--no-push` (everything
+locally, no network).
+
+| Bump | When |
+| --- | --- |
+| `patch` | a fix — a colour that clashed, a rule that leaked on mobile |
+| `minor` | new rules, new extras, a new palette entry |
+| `major` | a re-skin: the theme looks meaningfully different |
+
+Check the result the same way as the first upload:
+
+```bash
+./build-theme-zip.sh          # manifest ok + repoUrl reachable
+unzip -p dist/plum-blossom-theme.zip manifest.json | grep -A4 version
+```
+
+Keep these three in sync — RemNote compares the zip's `version` with what is
+installed:
+
+| File | Role |
+| --- | --- |
+| `manifest.json` | source of truth, read by RemNote |
+| `CHANGELOG.md` | the human-readable entry, linked from the manifest |
+| git tag `vX.Y.Z` | your record of what shipped |
+
+---
+
 ## 中文说明
 
 这是一个浅色、可爱、中式风格的 RemNote 主题：宣纸底、紫藤紫、花瓣粉，圆角、
@@ -254,6 +324,10 @@ then upload `dist/plum-blossom-theme.zip` from
 - **附加效果**（可选，各自单独粘贴）：`extras/falling-petals.css` 落花飘动、
   `extras/blossom-bullets.css` ❀ 项目符号、`extras/chinese-fonts.css` 中文字体。
 - 出问题可以用 `remnote.com/notes?disableCustomCSS` 先关掉所有自定义 CSS。
+- **更新版本**：`./release.sh patch "说明"` 会自动改 `manifest.json` 的版本号、在
+  `CHANGELOG.md` 加一条记录、重新打包、提交并打 tag；然后到 RemNote 的
+  Build → Upload Theme 重新上传 zip。官方文档只讲首次上传，没有讲更新流程，
+  能依赖的只有：**同一个 `id` + 更高的 `version` + 重新上传**。
 
 ---
 
@@ -264,8 +338,10 @@ theme.css                 the theme (light first, six sections)
 manifest.json             Theme plugin manifest, enableOnMobile: true
 README.md                 this file (also what the marketplace shows)
 PUBLISHING.md             how to publish: create the public repo, then upload
+CHANGELOG.md              release notes, linked from the manifest
 preview.html              local preview with toggles
 dev.sh / dev_server.py    serve the theme on localhost:8080 for live testing
+release.sh                bump + changelog + build + commit + tag + push
 build-theme-zip.sh        validates the manifest, builds dist/plum-blossom-theme.zip
 extras/falling-petals.css
 extras/blossom-bullets.css

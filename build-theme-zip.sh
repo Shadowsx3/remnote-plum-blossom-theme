@@ -80,6 +80,15 @@ check(
 )
 check(isinstance(m.get("requiredScopes"), list), "requiredScopes must be a list")
 
+# Optional links: the SDK schema types them as url().optional(), and the
+# marketplace surfaces them on the details page.
+for field in ("projectUrl", "supportUrl", "changelogUrl"):
+    value = m.get(field)
+    check(
+        value is None or (isinstance(value, str) and URL_RE.match(value)),
+        f"{field} must be a valid http(s) URL when present",
+    )
+
 if errors:
     print("manifest.json does not match RemNote's schema:")
     for e in errors:

@@ -71,6 +71,37 @@ curl -s -o /dev/null -w '%{http_code}\n' https://github.com/Shadowsx3/remnote-pl
 Then RemNote → **Plugins and Themes → Build → Upload Theme** →
 `dist/plum-blossom-theme.zip`.
 
+## Updating an already-published theme
+
+RemNote's docs cover the first upload only — there is no documented update
+procedure. What is documented, and what it implies:
+
+- **Manifest** (`version` is required): *"Only one plugin of each ID can be
+  installed or registered in our marketplace"* → re-uploading the **same `id`**
+  updates that listing rather than creating a second one.
+- **Submitting Plugins**: the upload is done in-app, from the Build tab, and the
+  repo must be public.
+- **SDK changelog**: *"Manifests are now validated on build"*, and
+  *"Add Repository and Report bugs links to the marketplace details page"* —
+  hence `projectUrl` / `supportUrl` / `changelogUrl` in the manifest.
+
+So: **same `id`, bumped `version`, re-upload the zip.** One command does the
+local half:
+
+```bash
+./release.sh patch "fixed the phone watermark on iPad"     # or minor / major
+./release.sh minor "added a slate accent" --dry-run        # preview only
+```
+
+It bumps the manifest, adds a dated `CHANGELOG.md` entry, validates and rebuilds
+the zip, commits, tags `vX.Y.Z`, and pushes. Then:
+
+**Plugins and Themes → Build → Upload Theme** → `dist/plum-blossom-theme.zip`
+
+Not documented anywhere I could find: whether installed copies auto-refresh, or
+whether an equal/lower version is rejected. Test it by uploading `1.0.1` over
+`1.0.0` and watching the Build tab; the Discord is the place to ask.
+
 ## Using a different name or owner
 
 Edit `repoUrl` in `manifest.json` and the screenshot URLs in `README.md`,

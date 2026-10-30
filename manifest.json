@@ -4,6 +4,9 @@
   "name": "Plum Blossom 紫梅 (Cute Purple)",
   "author": "bassmd",
   "repoUrl": "https://github.com/Shadowsx3/remnote-plum-blossom-theme",
+  "projectUrl": "https://github.com/Shadowsx3/remnote-plum-blossom-theme",
+  "supportUrl": "https://github.com/Shadowsx3/remnote-plum-blossom-theme/issues",
+  "changelogUrl": "https://github.com/Shadowsx3/remnote-plum-blossom-theme/blob/main/CHANGELOG.md",
   "enableOnMobile": true,
   "version": {
     "major": 1,
