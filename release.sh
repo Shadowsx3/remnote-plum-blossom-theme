@@ -9,6 +9,11 @@
 #   --dry-run    print the plan, change nothing
 #   --no-push    do everything locally except `git push`
 #
+# If git has no stored GitHub credential on this machine (only GitHub Desktop
+# does, and that token is app-specific), pass one:
+#
+#   GH_TOKEN=ghp_xxx ./release.sh patch "fixed the watermark on iPad"
+#
 # It bumps the version in manifest.json, prepends a dated entry to
 # CHANGELOG.md, validates + rebuilds dist/plum-blossom-theme.zip, commits, tags
 # vX.Y.Z and pushes main + the tag.
@@ -42,6 +47,8 @@ usage: ./release.sh <major|minor|patch> "<changelog line>" [--dry-run] [--no-pus
   patch   a fix            (1.0.0 -> 1.0.1)
   minor   new rules/extras (1.0.0 -> 1.1.0)
   major   a re-skin        (1.0.0 -> 2.0.0)
+
+  GH_TOKEN=<token> ./release.sh ...   if git has no stored GitHub credential
 EOF
   exit 1
 fi
@@ -127,15 +134,37 @@ git tag -a "$NEW" -m "$NEW: $MESSAGE"
 echo "committed and tagged $NEW"
 
 # --- push -----------------------------------------------------------------
+# git has no credential of its own on a fresh machine (GitHub Desktop's token is
+# app-specific), so accept one here the same way publish.sh does.
 if [ "$DO_PUSH" = 1 ]; then
+  PUSH_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
+  ORIGIN_URL="$(git remote get-url origin)"
+
+  restore_remote() {
+    git remote set-url origin "$ORIGIN_URL" 2>/dev/null || true
+  }
+
+  if [ -n "$PUSH_TOKEN" ]; then
+    case "$ORIGIN_URL" in
+      https://*)
+        git remote set-url origin "https://x-access-token:${PUSH_TOKEN}@${ORIGIN_URL#https://}"
+        trap restore_remote EXIT
+        ;;
+      *) echo "note: GH_TOKEN set but origin is not https, pushing as-is" ;;
+    esac
+  fi
+
   if ! git push origin main --follow-tags; then
+    restore_remote
     echo
-    echo "push failed (no credential?). Options:" >&2
-    echo "  * sign in via GitHub Desktop, or" >&2
-    echo "  * GH_TOKEN=<pat> git push origin main --follow-tags" >&2
+    echo "push failed. Options:" >&2
+    echo "  * GH_TOKEN=<pat> ./release.sh $BUMP \"$MESSAGE\"      # token in the URL, restored after" >&2
+    echo "  * or push by hand once credentials are set up (see PUBLISHING.md)" >&2
     echo "The commit and tag exist locally either way." >&2
     exit 1
   fi
+
+  restore_remote
   echo "pushed main + $NEW"
 fi
 

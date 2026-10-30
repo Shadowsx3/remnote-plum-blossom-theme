@@ -15,6 +15,11 @@ Build → Upload Theme**. See the README for the details.
 
 <!-- releases -->
 
+## 1.0.1 — 2026-10-30
+
+- marketplace metadata: Repository, Report bugs and Changelog links
+
+
 ## 1.0.0 — 2026-10-30
 
 First release. 紫梅 Plum Blossom, a cute purple Chinese-inspired light theme:
