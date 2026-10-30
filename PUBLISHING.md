@@ -91,6 +91,9 @@ local half:
 ```bash
 ./release.sh patch "fixed the phone watermark on iPad"     # or minor / major
 ./release.sh minor "added a slate accent" --dry-run        # preview only
+
+# if git has no stored GitHub credential on this machine, pass one:
+GH_TOKEN=<pat> ./release.sh patch "fixed the phone watermark on iPad"
 ```
 
 It bumps the manifest, adds a dated `CHANGELOG.md` entry, validates and rebuilds
