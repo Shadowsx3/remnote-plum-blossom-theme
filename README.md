@@ -32,18 +32,19 @@ the viewport, not the window.
 
 ### 预览 / screenshots
 
-![Plum Blossom on desktop, light](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-light.png)
+![Plum Blossom on desktop, light](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-light.png?v=1.1.0)
 
-*Light — 宣纸 paper, plum purple, pastel highlighters, the blossom tile, and
+*Light — 宣纸 paper, plum purple, pastel highlighters, the drifting petals, and
 紫梅 in the corner.*
 
 | Phone · 390px | Extras on | Dark fallback |
 | --- | --- | --- |
-| ![phone](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-phone.png) | ![extras](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-extras.png) | ![dark](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-dark.png) |
+| ![phone](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-phone.png?v=1.1.0) | ![extras](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-extras.png?v=1.1.0) | ![dark](https://raw.githubusercontent.com/Shadowsx3/remnote-plum-blossom-theme/main/docs/preview-dark.png?v=1.1.0) |
 
-(The image links are absolute `raw.githubusercontent.com` URLs so that they also
-render in the RemNote marketplace, which shows this README. If you rename the
-repo, update them and `repoUrl` in `manifest.json`.)
+(The image links are absolute `raw.githubusercontent.com` URLs, so they also
+render in the RemNote marketplace, which shows this README. The `?v=` is cache
+busting: raw.githubusercontent caches hard, so bump it whenever you replace a
+screenshot — and update these links if you ever rename the repo.)
 
 The phone shot shows the real mobile rules at work: the blossom tile and the
 紫梅 watermark step aside, the queue and chrome go solid, and the add button
@@ -149,14 +150,14 @@ Same as A, but rename `theme.css` to `snippet.css` and set `"theme": []` in
 | Study queue | paper background, plum progress bar |
 | Dividers | plum→petal gradient line |
 | Scrollbars, selection | plum thumb, plum blush |
-| Decoration | blossom tile + wash on the document, vertical 紫梅 watermark |
+| Decoration | 落花 drifting petals over a plum wash, vertical 紫梅 watermark |
 
 **Mobile & touch (all behind media queries, so desktop is untouched):**
 
 - solid paper backgrounds for the queue and mobile chrome (the phone app paints
   solid instead of layered)
-- the blossom tile and the 紫梅 watermark step aside on small screens, so
-  decoration never competes with your notes
+- the petals drop to a single, slower layer (54s → 90s) and the 紫梅 watermark
+  steps aside, so decoration never competes with your notes
 - the format toolbar keeps 6px off the screen edges
 - the add button clears the home indicator on notched phones
   (`env(safe-area-inset-bottom)`)
@@ -189,8 +190,10 @@ Things you may want to switch off, each marked in the file:
 
 | Want | Do |
 | --- | --- |
+| Freeze the petals | set `--pb-petal-drift: 0s` in section 0 |
+| Slower / faster petals | raise or lower `--pb-petal-drift` (default `54s`) |
+| No petals at all | delete the `.rn-document-wrapper` rule and `@keyframes pb-petals-fall` |
 | No watermark | delete the `body::after` block in section 3 |
-| No blossom tile | remove `var(--pb-petals)` from `.rn-document-wrapper` |
 | No `❀` before headings | delete the `.rn-text-heading-large::before` block |
 | No rounded font | delete the `body, .rn-text, .rn-editor-container` font rule |
 | No dark fallback | delete section 6 (the last block in the file) |
@@ -198,15 +201,20 @@ Things you may want to switch off, each marked in the file:
 
 ---
 
-## Extras (optional, paste each as its own CSS block)
+## Extras — and what actually ships in the plugin
 
-| File | What it does | Notes |
+**A theme plugin only ships `theme.css`,** which is why the petals and the plum
+bullets live *inside* it (as of 1.1.0): anything you want marketplace users to
+get has to be in that one file. What remains in `extras/` is the two things that
+cannot or should not ship there:
+
+| File | What it does | Why it is not in the theme |
 | --- | --- | --- |
-| `extras/falling-petals.css` | 落花 — the blossom tile drifts slowly across the document | pure CSS, behind your text, slower and dimmer on phones, still under `prefers-reduced-motion` |
-| `extras/blossom-bullets.css` | plum bullets, and `❀` instead of the dot | **experimental**: the dot's markup is internal, so it is written to degrade gently. Variant A is safe; Variant B may need the negative margin nudged |
-| `extras/chinese-fonts.css` | 马善政 headings, Noto Serif SC body, 站酷快乐体 labels | loads Google Fonts, so it needs to be online the first time; paste it on its own because `@import` must come first in a stylesheet |
+| `extras/blossom-bullets.css` | swaps the bullet dot for `❀` | **experimental** — the dot's markup is internal, so it is written to degrade gently (worst case: the normal dot with a small ❀ next to it). The *plum* bullets are already in the theme; only the ❀ swap is extra. |
+| `extras/chinese-fonts.css` | 马善政 headings, Noto Serif SC body, 站酷快乐体 labels | it loads Google Fonts — a request to a third party on every load, which is the user's call rather than the theme's (and a plugin that does that should say so in its README). Also `@import` must be first in a stylesheet, so it needs its own CSS block. |
 
-None of them are required, and nothing in `theme.css` depends on them.
+Paste each as its own CSS block in the Custom CSS powerup. Nothing in
+`theme.css` depends on them.
 
 ---
 
@@ -218,6 +226,15 @@ out. Then fix or remove the offending block.
 
 To find the class RemNote is actually using for an element, install the
 **CSS Selector Helper** plugin and click the element.
+
+**A theme that looks stale after an update.** RemNote applies the theme CSS when
+it loads, and browsers cache hard, so:
+
+- toggle the theme off and on in Plugins and Themes, or reload RemNote;
+- `raw.githubusercontent.com` caches too — the README screenshots can lag a push
+  by minutes, which is what the `?v=` in those URLs is for;
+- if you are testing locally, `./dev.sh` already sends
+  `Cache-Control: no-store`, so edits show up on reload.
 
 ---
 
@@ -321,8 +338,10 @@ installed:
   媒体查询里，桌面版不受影响。小屏幕上会隐藏梅花纹理与「紫梅」水印。
 - **深色模式**只是兜底（紫梅夜色），不用的话可以整段删掉第 6 节。
 - **预览**：用浏览器打开 `preview.html`，可以切换深色模式与三个附加效果。
-- **附加效果**（可选，各自单独粘贴）：`extras/falling-petals.css` 落花飘动、
-  `extras/blossom-bullets.css` ❀ 项目符号、`extras/chinese-fonts.css` 中文字体。
+- **附加效果**（可选，各自单独粘贴）：`extras/blossom-bullets.css` ❀ 项目符号、
+  `extras/chinese-fonts.css` 中文字体。落花飘动与紫梅色项目符号已经写进
+  `theme.css`——主题插件只会加载 `theme.css` 一个文件，想要市场版用户也能看到，
+  就必须写在这一个文件里。
 - 出问题可以用 `remnote.com/notes?disableCustomCSS` 先关掉所有自定义 CSS。
 - **更新版本**：`./release.sh patch "说明"` 会自动改 `manifest.json` 的版本号、在
   `CHANGELOG.md` 加一条记录、重新打包、提交并打 tag；然后到 RemNote 的
@@ -343,7 +362,6 @@ preview.html              local preview with toggles
 dev.sh / dev_server.py    serve the theme on localhost:8080 for live testing
 release.sh                bump + changelog + build + commit + tag + push
 build-theme-zip.sh        validates the manifest, builds dist/plum-blossom-theme.zip
-extras/falling-petals.css
 extras/blossom-bullets.css
 extras/chinese-fonts.css
 docs/preview-*.png        screenshots from the rendered Chromium run

@@ -67,8 +67,19 @@
   --pb-shadow-soft: 0 2px 10px rgba(142, 91, 201, 0.1);
   --pb-shadow-lift: 0 6px 22px rgba(142, 91, 201, 0.16);
 
-  /* a whisper of plum blossoms, tiled behind the page (2 blossoms, 96px) */
+  /* the still tile — used instead of the drifting petals when the visitor asks
+     for reduced motion (2 blossoms, 96px) */
   --pb-petals: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='%23B57EDC' fill-opacity='0.10'%3E%3Cg transform='translate(22 22)'%3E%3Ccircle cx='0' cy='-4' r='3.1'/%3E%3Ccircle cx='3.8' cy='-1.2' r='3.1'/%3E%3Ccircle cx='2.4' cy='3.2' r='3.1'/%3E%3Ccircle cx='-2.4' cy='3.2' r='3.1'/%3E%3Ccircle cx='-3.8' cy='-1.2' r='3.1'/%3E%3C/g%3E%3C/g%3E%3Cg fill='%23F2A7C3' fill-opacity='0.14'%3E%3Cg transform='translate(72 70) scale(0.8)'%3E%3Ccircle cx='0' cy='-4' r='3.1'/%3E%3Ccircle cx='3.8' cy='-1.2' r='3.1'/%3E%3Ccircle cx='2.4' cy='3.2' r='3.1'/%3E%3Ccircle cx='-2.4' cy='3.2' r='3.1'/%3E%3Ccircle cx='-3.8' cy='-1.2' r='3.1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+
+  /* 落花 falling petals — two tiles that drift over the document.
+     The near layer is bigger and brighter, the far one smaller and dimmer;
+     the speed difference is what reads as depth. */
+  --pb-petal-fall: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'%3E%3Cg fill='%23B57EDC' fill-opacity='0.5'%3E%3Cg transform='translate(58 46) scale(1.5)'%3E%3Ccircle cx='0' cy='-6' r='4.6'/%3E%3Ccircle cx='5.7' cy='-1.9' r='4.6'/%3E%3Ccircle cx='3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-5.7' cy='-1.9' r='4.6'/%3E%3C/g%3E%3Cg transform='translate(232 168) scale(1.1)'%3E%3Ccircle cx='0' cy='-6' r='4.6'/%3E%3Ccircle cx='5.7' cy='-1.9' r='4.6'/%3E%3Ccircle cx='3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-5.7' cy='-1.9' r='4.6'/%3E%3C/g%3E%3Cg transform='translate(120 262) scale(0.9)'%3E%3Ccircle cx='0' cy='-6' r='4.6'/%3E%3Ccircle cx='5.7' cy='-1.9' r='4.6'/%3E%3Ccircle cx='3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-5.7' cy='-1.9' r='4.6'/%3E%3C/g%3E%3C/g%3E%3Cg fill='%23F2A7C3' fill-opacity='0.55'%3E%3Cellipse cx='176' cy='86' rx='7' ry='4' transform='rotate(-24 176 86)'/%3E%3Cellipse cx='40' cy='204' rx='6' ry='3.4' transform='rotate(38 40 204)'/%3E%3Cellipse cx='284' cy='286' rx='7' ry='4' transform='rotate(-12 284 286)'/%3E%3C/g%3E%3C/svg%3E");
+  --pb-petal-fall-far: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='%23D3B3EE' fill-opacity='0.4'%3E%3Cg transform='translate(70 60) scale(0.8)'%3E%3Ccircle cx='0' cy='-6' r='4.6'/%3E%3Ccircle cx='5.7' cy='-1.9' r='4.6'/%3E%3Ccircle cx='3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-5.7' cy='-1.9' r='4.6'/%3E%3C/g%3E%3Cg transform='translate(190 180) scale(0.6)'%3E%3Ccircle cx='0' cy='-6' r='4.6'/%3E%3Ccircle cx='5.7' cy='-1.9' r='4.6'/%3E%3Ccircle cx='3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-3.5' cy='4.9' r='4.6'/%3E%3Ccircle cx='-5.7' cy='-1.9' r='4.6'/%3E%3C/g%3E%3C/g%3E%3Cg fill='%23F9D6E4' fill-opacity='0.5'%3E%3Cellipse cx='150' cy='120' rx='5' ry='3' transform='rotate(20 150 120)'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* how long one drift cycle takes. Set it to 0s to freeze the petals, or
+     raise it (120s) to make them almost still. */
+  --pb-petal-drift: 54s;
 }
 
 /* --------------------------------------------------------------------------
@@ -449,17 +460,43 @@ body {
    3. Cute details — 梅花 blossoms, the 紫梅 watermark, ink and paper
    -------------------------------------------------------------------------- */
 
-/* paper: a plum wash at the top of each document, plus a whisper of blossoms.
-   Delete the radial-gradient() if you want a perfectly plain page. */
+/* paper: a plum wash at the top of each document, plus 落花 falling petals.
+   The petals are the document's own background, so they are always behind your
+   text and never block a click. To freeze them set --pb-petal-drift: 0s in
+   section 0; to remove them entirely, delete this block and the @keyframes. */
 .rn-document-wrapper {
-  background-image: radial-gradient(
+  background-image: var(--pb-petal-fall), var(--pb-petal-fall-far),
+    radial-gradient(
       120% 55% at 50% 0%,
       rgba(181, 126, 220, 0.1) 0%,
       rgba(242, 167, 195, 0.06) 40%,
       rgba(253, 250, 255, 0) 72%
-    ),
-    var(--pb-petals);
-  background-repeat: no-repeat, repeat;
+    );
+  background-size: 320px 320px, 240px 240px, 120% 55%;
+  background-repeat: repeat, repeat, no-repeat;
+  animation: pb-petals-fall var(--pb-petal-drift) linear infinite;
+}
+
+@keyframes pb-petals-fall {
+  from {
+    background-position: 0 0, 0 0, 50% 0%;
+  }
+  to {
+    /* both deltas are exact multiples of their tile, so the loop is seamless */
+    background-position: 320px 320px, -240px 240px, 50% 0%;
+  }
+}
+
+/* bullets — plum, blushing pink on hover. (Swapping the dot for ❀ is a
+   separate, riskier extra: see extras/blossom-bullets.css.) */
+.rn-bullet-container,
+.rn-bullet-container svg {
+  color: var(--pb-plum-400);
+}
+
+.rn-bullet-container:hover,
+.rn-bullet-container:hover svg {
+  color: var(--pb-petal-400);
 }
 
 /* 紫梅 — "purple plum", written top-to-bottom in the corner like a scroll.
@@ -543,6 +580,7 @@ body::after {
   border-left: 3px solid var(--pb-plum-300);
   border-radius: var(--pb-radius-md);
   padding-left: 8px;
+  box-shadow: var(--pb-shadow-soft);
 }
 
 /* tags and powerup labels — little plum sweets */
@@ -615,15 +653,20 @@ svg[data-icon="rem-top-level-rem-light"] path[fill="#CACAD9"] {
     color: var(--pb-ink);
   }
 
-  /* on a 6" screen the paper wash stays, the blossom tile and the 紫梅
-     watermark go: decoration should not compete with your notes */
+  /* on a 6" screen: one slow, dim petal layer instead of two, and the 紫梅
+     watermark goes — decoration should not compete with your notes */
   .rn-document-wrapper {
-    background-image: radial-gradient(
-      140% 40% at 50% 0%,
-      rgba(181, 126, 220, 0.1) 0%,
-      rgba(253, 250, 255, 0) 70%
-    );
-    background-repeat: no-repeat;
+    background-image: var(--pb-petal-fall-far),
+      radial-gradient(
+        140% 40% at 50% 0%,
+        rgba(181, 126, 220, 0.1) 0%,
+        rgba(253, 250, 255, 0) 70%
+      );
+    background-size: 240px 240px, 140% 40%;
+    background-repeat: repeat, no-repeat;
+    /* the shared keyframes still line up: the far tile is 240px and the far
+       layer's delta is exactly -240px / +240px */
+    animation-duration: 90s;
   }
 
   body::after {
@@ -642,12 +685,8 @@ svg[data-icon="rem-top-level-rem-light"] path[fill="#CACAD9"] {
   }
 }
 
-/* tablets: decorations stay, the wash just calms down */
-@media (min-width: 769px) and (max-width: 1180px) {
-  .rn-document-wrapper {
-    background-image: var(--pb-petals);
-  }
-}
+/* (tablets used to get a calmer static tile here; now they get the same two
+   drifting layers as the desktop, which reads fine at that size) */
 
 /* a finger, not a mouse: hover feedback that lingers after a tap is noise */
 @media (hover: none) {
@@ -682,7 +721,8 @@ html {
   outline-offset: 2px;
 }
 
-/* the theme itself is still; the optional extras animate, and they obey this */
+/* the petals stop for anyone who asked for less motion, and fall back to the
+   still tile instead of freezing mid-drift */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -690,6 +730,19 @@ html {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+
+  .rn-document-wrapper {
+    animation: none;
+    background-image: var(--pb-petals),
+      radial-gradient(
+        120% 55% at 50% 0%,
+        rgba(181, 126, 220, 0.1) 0%,
+        rgba(242, 167, 195, 0.06) 40%,
+        rgba(253, 250, 255, 0) 72%
+      );
+    background-size: 96px 96px, 120% 55%;
+    background-repeat: repeat, no-repeat;
   }
 }
 

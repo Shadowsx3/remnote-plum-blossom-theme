@@ -15,6 +15,11 @@ Build → Upload Theme**. See the README for the details.
 
 <!-- releases -->
 
+## 1.1.0 — 2026-10-30
+
+- falling petals and plum bullets now ship inside theme.css; add release guards
+
+
 ## 1.0.1 — 2026-10-30
 
 - marketplace metadata: Repository, Report bugs and Changelog links

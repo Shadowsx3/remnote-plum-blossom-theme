@@ -101,6 +101,21 @@
         font: 13px/1.4 system-ui, sans-serif;
       }
 
+      /* preview-only: emulate the reduced-motion look, so the "falling petals"
+         checkbox shows both states of the built-in animation */
+      body.pv-no-petals .rn-document-wrapper {
+        animation: none;
+        background-image: var(--pb-petals),
+          radial-gradient(
+            120% 55% at 50% 0%,
+            rgba(181, 126, 220, 0.1) 0%,
+            rgba(242, 167, 195, 0.06) 40%,
+            rgba(253, 250, 255, 0) 72%
+          );
+        background-size: 96px 96px, 120% 55%;
+        background-repeat: repeat, no-repeat;
+      }
+
       .pv-phone {
         width: 390px;
         height: 780px;
@@ -128,7 +143,7 @@
     <div class="pv-toolbar">
       <strong>紫梅 Plum Blossom</strong>
       <label><input type="checkbox" id="pv-dark" /> dark fallback</label>
-      <label><input type="checkbox" id="pv-petals" /> falling petals</label>
+      <label><input type="checkbox" id="pv-petals" checked /> falling petals</label>
       <label><input type="checkbox" id="pv-bullets" /> ❀ bullets</label>
       <label><input type="checkbox" id="pv-fonts" /> Chinese fonts</label>
       <span class="pv-hint"
@@ -259,8 +274,14 @@
         document.body.classList.toggle('light', !dark.checked);
       });
 
+      // The petals are built into theme.css now, so this checkbox freezes them
+      // rather than loading a file.
+      const petals = document.getElementById('pv-petals');
+      petals.addEventListener('change', () => {
+        document.body.classList.toggle('pv-no-petals', !petals.checked);
+      });
+
       const extras = {
-        'pv-petals': 'extras/falling-petals.css',
         'pv-bullets': 'extras/blossom-bullets.css',
         'pv-fonts': 'extras/chinese-fonts.css',
       };

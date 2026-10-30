@@ -28,11 +28,13 @@ BUMP=""
 MESSAGE=""
 DRY_RUN=0
 DO_PUSH=1
+ALLOW_NEW_ID=0
 
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=1 ;;
     --no-push) DO_PUSH=0 ;;
+    --new-id) ALLOW_NEW_ID=1 ;;
     major | minor | patch) BUMP="$arg" ;;
     *)
       if [ -z "$MESSAGE" ]; then MESSAGE="$arg"; fi
@@ -71,6 +73,45 @@ case "$BUMP" in
 esac
 NEW="v$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH"
 TODAY="$(date +%Y-%m-%d)"
+
+# --- guards: the two mistakes that break a live listing --------------------
+# 1. the id is permanent — changing it creates a second marketplace listing
+#    instead of updating the approved one.
+# 2. the version must move forward — it is what RemNote compares against, so a
+#    same-or-lower version is not an update.
+LAST_TAG="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+if [ -n "$LAST_TAG" ]; then
+  RELEASED_ID="$(git show "$LAST_TAG:manifest.json" 2>/dev/null |
+    python3 -c "import json,sys;print(json.load(sys.stdin).get('id',''))" 2>/dev/null || true)"
+  CURRENT_ID="$(python3 -c "import json;print(json.load(open('manifest.json'))['id'])")"
+
+  if [ -n "$RELEASED_ID" ] && [ "$RELEASED_ID" != "$CURRENT_ID" ]; then
+    echo "REFUSING to release: the plugin id changed." >&2
+    echo "  released as  $RELEASED_ID  ($LAST_TAG)" >&2
+    echo "  now          $CURRENT_ID" >&2
+    echo "RemNote keys a listing off the id, so a new id means a second listing" >&2
+    echo "rather than an update to the approved one. Restore the id, or pass" >&2
+    echo "--new-id if you really are publishing a separate theme." >&2
+    if [ "$ALLOW_NEW_ID" != 1 ]; then exit 1; fi
+  fi
+
+  RELEASED_VERSION="$(git show "$LAST_TAG:manifest.json" |
+    python3 -c "import json,sys;v=json.load(sys.stdin)['version'];print('%d.%d.%d' % (v['major'],v['minor'],v['patch']))")"
+  python3 - "$RELEASED_VERSION" "$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH" <<'PY' || exit 1
+import sys
+
+def parts(v):
+    return tuple(int(p) for p in v.split("."))
+
+released, new = parts(sys.argv[1]), parts(sys.argv[2])
+if new <= released:
+    sys.exit(
+        f"REFUSING to release: {sys.argv[2]} is not newer than the released "
+        f"{sys.argv[1]} (that is the version RemNote compares against)."
+    )
+PY
+  echo "guards ok: id unchanged, v$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH > v$RELEASED_VERSION ($LAST_TAG)"
+fi
 
 echo "release plan"
 echo "  version   $OLD  ->  $NEW   ($BUMP)"

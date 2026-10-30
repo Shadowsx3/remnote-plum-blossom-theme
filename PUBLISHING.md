@@ -105,6 +105,24 @@ Not documented anywhere I could find: whether installed copies auto-refresh, or
 whether an equal/lower version is rejected. Test it by uploading `1.0.1` over
 `1.0.0` and watching the Build tab; the Discord is the place to ask.
 
+Two guards run before anything is written, because both mistakes are silent
+otherwise:
+
+- **the `id` changed** → refuses, since RemNote keys the listing off the id and a
+  new one would create a second listing (override with `--new-id` if that is
+  really what you want);
+- **the new version is not newer than the last git tag** → refuses, since the
+  version is what RemNote compares against.
+
+Two things to remember when updating:
+
+- **A theme plugin only ships `theme.css`.** Anything users should get has to be
+  in that file — extras pasted into the Custom CSS powerup never reach
+  marketplace users.
+- **Replacing the README screenshots?** Bump the `?v=` query in the image URLs;
+  `raw.githubusercontent.com` caches aggressively and will otherwise keep serving
+  the old pictures.
+
 ## Using a different name or owner
 
 Edit `repoUrl` in `manifest.json` and the screenshot URLs in `README.md`,
